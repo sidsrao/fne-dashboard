@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FNE Dashboard - Functional Natural Ecosystems Monitor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --forest-dark: #1a4d2e;
+            --forest-medium: #2d7a4f;
+            --forest-light: #52b788;
+            --earth: #8b6f47;
+            --warning: #f77f00;
+            --alert: #d62828;
+            --success: #52b788;
+            --excellent: #2d6a4f;
+            --sky: #457b9d;
+            --mist: #f1faee;
+            --cream: #fffef7;
+            --text-dark: #1b263b;
+            --text-medium: #415a77;
+            --text-light: #778da9;
+            --shadow: rgba(27, 38, 59, 0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f1faee 0%, #e8f5e9 50%, #f1faee 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .demo-banner {
+            background: linear-gradient(135deg, var(--forest-dark), var(--forest-medium));
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .demo-banner strong {
+            color: var(--forest-light);
+        }
+        
+        .header {
+            background: white;
+            box-shadow: 0 2px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            flex: 1;
+        }
+        
+        .logo {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--forest-dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .tagline {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+        
+        .header-score {
+            text-align: center;
+            padding: 1.5rem 2.5rem;
+            background: linear-gradient(135deg, var(--mist), white);
+            border-radius: 16px;
+            border: 2px solid var(--forest-light);
+        }
+        
+        .header-score-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-score-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--forest-medium);
+            line-height: 1;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .header-score-max {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        
+        .header-score-change {
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--warning);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        
+        .landscape-selector {
+            text-align: right;
+        }
+        
+        .landscape-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--forest-dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .landscape-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem;
+        }
+        
+        .status-bar {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .status-main {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--forest-light), var(--forest-medium));
+        }
+        
+        .status-text h2 {
+            font-size: 1.5rem;
+            color: var(--forest-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: rgba(247, 127, 0, 0.1);
+            border: 2px solid var(--warning);
+            border-radius: 30px;
+            font-weight: 700;
+            color: var(--warning);
+            font-size: 0.9rem;
+        }
+        
+        .status-meta {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--mist);
+        }
+        
+        .card-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--forest-dark);
+        }
+        
+        .card-action {
+            font-size: 0.85rem;
+            color: var(--forest-medium);
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .card-action:hover {
+            color: var(--forest-dark);
+            gap: 0.75rem;
+        }
+        
+        /* Enhanced Gauge Chart */
+        .gauge-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 2rem auto;
+        }
+        
+        .gauge-svg {
+            width: 100%;
+            height: auto;
+        }
+        
+        .gauge-bg {
+            fill: none;
+            stroke: var(--mist);
+            stroke-width: 20;
+        }
+        
+        .gauge-value {
+            fill: none;
+            stroke-width: 20;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease-out;
+        }
+        
+        .gauge-excellent { stroke: var(--excellent); }
+        .gauge-good { stroke: var(--success); }
+        .gauge-moderate { stroke: var(--forest-light); }
+        .gauge-fair { stroke: var(--warning); }
+        .gauge-poor { stroke: var(--alert); }
+        
+        .gauge-center {
+            text-align: center;
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .gauge-score {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--forest-dark);
+        }
+        
+        .gauge-label {
+            font-size: 1rem;
+            color: var(--text-medium);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
+        .gauge-legend {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--mist);
+        }
+        
+        .gauge-legend-item {
+            text-align: center;
+        }
+        
+        .gauge-legend-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+        
+        .gauge-legend-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+        
+        /* Improved Marker List */
+        .markers-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .marker-card {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: linear-gradient(to right, var(--mist), white);
+            border-radius: 12px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .marker-card:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+        
+        .marker-card.excellent { border-left-color: var(--excellent); }
+        .marker-card.good { border-left-color: var(--success); }
+        .marker-card.moderate { border-left-color: var(--forest-light); }
+        .marker-card.fair { border-left-color: var(--warning); }
+        .marker-card.poor { border-left-color: var(--alert); }
+        
+        .marker-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            filter: grayscale(0.3);
+        }
+        
+        .marker-info {
+            flex: 1;
+        }
+        
+        .marker-name {
+            font-weight: 700;
+            color: var(--forest-dark);
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .marker-description {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .marker-score-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .marker-score-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--forest-dark);
+            min-width: 60px;
+            text-align: right;
+        }
+        
+        .marker-bar {
+            flex: 1;
+            height: 12px;
+            background: var(--mist);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .marker-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 1s ease-out;
+        }
+        
+        .marker-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            min-width: 40px;
+            justify-content: center;
+        }
+        
+        .trend-improving { color: var(--success); }
+        .trend-stable { color: var(--text-light); }
+        .trend-declining { color: var(--alert); }
+        
+        /* Alert Cards */
+        .alerts-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .alert-card {
+            padding: 2rem;
+            border-radius: 16px;
+            border-left: 6px solid;
+            background: white;
+            box-shadow: 0 2px 12px var(--shadow);
+            animation: slideIn 0.5s ease forwards;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .alert-card:nth-child(1) { animation-delay: 0.1s; }
+        .alert-card:nth-child(2) { animation-delay: 0.2s; }
+        .alert-card:nth-child(3) { animation-delay: 0.3s; }
+        
+        .alert-card.critical {
+            border-left-color: var(--alert);
+            background: linear-gradient(to right, rgba(214, 40, 40, 0.03), white);
+        }
+        
+        .alert-card.warning {
+            border-left-color: var(--warning);
+            background: linear-gradient(to right, rgba(247, 127, 0, 0.03), white);
+        }
+        
+        .alert-card.positive {
+            border-left-color: var(--success);
+            background: linear-gradient(to right, rgba(82, 183, 136, 0.03), white);
+        }
+        
+        .alert-header {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+        
+        .alert-content {
+            flex: 1;
+        }
+        
+        .alert-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--forest-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .alert-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .alert-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .alert-summary {
+            color: var(--text-dark);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-impact {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(26, 77, 46, 0.08);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--forest-dark);
+        }
+        
+        .alert-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--forest-dark);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--forest-medium);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 77, 46, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--forest-dark);
+            border: 2px solid var(--forest-light);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--mist);
+            border-color: var(--forest-medium);
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        /* Trend Chart Enhanced */
+        .trend-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: linear-gradient(to bottom, var(--mist), white);
+            border-radius: 12px;
+        }
+        
+        .trend-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .trend-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--forest-dark);
+        }
+        
+        .trend-period {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        /* Scenarios Enhanced */
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .scenario-card {
+            padding: 2rem;
+            border-radius: 16px;
+            border: 3px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .scenario-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+        
+        .scenario-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px var(--shadow);
+        }
+        
+        .scenario-declining {
+            background: rgba(214, 40, 40, 0.02);
+            border-color: var(--alert);
+        }
+        
+        .scenario-declining::before {
+            background: linear-gradient(90deg, var(--alert), #ff6b6b);
+        }
+        
+        .scenario-crisis {
+            background: rgba(139, 111, 71, 0.02);
+            border-color: var(--earth);
+        }
+        
+        .scenario-crisis::before {
+            background: linear-gradient(90deg, var(--earth), #d4a574);
+        }
+        
+        .scenario-recovery {
+            background: rgba(82, 183, 136, 0.02);
+            border-color: var(--success);
+        }
+        
+        .scenario-recovery::before {
+            background: linear-gradient(90deg, var(--success), #74c69d);
+        }
+        
+        .scenario-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .scenario-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--forest-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .scenario-score-display {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .scenario-score {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+        
+        .scenario-timeframe {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-medium);
+        }
+        
+        .scenario-description {
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            line-height: 1.6;
+            margin-top: 1rem;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--forest-dark), var(--forest-medium));
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .cta-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-text {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-cta {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-cta-primary {
+            background: white;
+            color: var(--forest-dark);
+        }
+        
+        .btn-cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(255,255,255,0.3);
+        }
+        
+        .btn-cta-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-cta-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .scenarios-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-inner {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            background-color: var(--forest-dark);
+            color: white;
+            text-align: center;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        🌿 <strong>DEMO:</strong> This is a prototype dashboard showing what real-time FNE monitoring could look like • Sample data for Kodagu Coffee Landscape
+    </div>
+
+    <div class="header">
+        <div class="header-inner">
+            <div class="logo-section">
+                <div class="logo">FNE Monitor</div>
+                <div class="tagline">Real-time Ecosystem Health Dashboard</div>
+            </div>
+            
+            <div class="header-score">
+                <div class="header-score-label">Current FNE Score</div>
+                <div class="header-score-value">
+                    6.2<span class="header-score-max">/10</span>
+                </div>
+                <div class="header-score-change">
+                    <span>↓</span>
+                    <span>-0.1 this month</span>
+                </div>
+            </div>
+            
+            <div class="landscape-selector">
+                <div class="landscape-name">📍 Kodagu Coffee Region</div>
+                <div class="landscape-meta">Western Ghats Montane Forests</div>
+                <div class="landscape-meta" style="margin-top: 0.5rem; font-weight: 600;">Last updated: 2 hours ago</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-main">
+                <div class="status-icon">🌲</div>
+                <div class="status-text">
+                    <h2>Landscape Status</h2>
+                    <div class="status-badge">
+                        <span>⚠️</span>
+                        <span>MODERATE-HIGH (Declining)</span>
+                    </div>
+                    <div class="status-meta">Connectivity at critical level • 3 urgent actions needed</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="scrollToAlerts()">View Urgent Alerts →</button>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Enhanced Gauge Chart -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Overall Health Score</h3>
+                    <a href="#" class="card-action" onclick="alert('Would show score methodology'); return false;">
+                        How is this calculated? →
+                    </a>
+                </div>
+                
+                <div class="gauge-container">
+                    <svg class="gauge-svg" viewBox="0 0 200 120">
+                        <!-- Background arc -->
+                        <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100" stroke-width="16"/>
+                        <!-- Value arc (animated) -->
+                        <path class="gauge-value gauge-good" 
+                              d="M 20 100 A 80 80 0 0 1 180 100" 
+                              stroke-dasharray="251.2" 
+                              stroke-dashoffset="95"
+                              stroke-width="16"/>
+                    </svg>
+                    <div class="gauge-center">
+                        <div class="gauge-score">6.2</div>
+                        <div class="gauge-label">MODERATE-HIGH</div>
+                    </div>
+                </div>
+                
+                <div class="gauge-legend">
+                    <div class="gauge-legend-item">
+                        <div class="gauge-legend-value" style="color: var(--alert);">3.0</div>
+                        <div class="gauge-legend-label">Minimum<br>Viable</div>
+                    </div>
+                    <div class="gauge-legend-item">
+                        <div class="gauge-legend-value" style="color: var(--success);">8.0</div>
+                        <div class="gauge-legend-label">Best Current<br>Example</div>
+                    </div>
+                    <div class="gauge-legend-item">
+                        <div class="gauge-legend-value" style="color: var(--excellent);">10.0</div>
+                        <div class="gauge-legend-label">Ecological<br>Potential</div>
+                    </div>
+                </div>
+                
+                <div class="trend-container">
+                    <div class="trend-header">
+                        <div class="trend-title">30-Day Trend</div>
+                        <div class="trend-period">Jan 2026</div>
+                    </div>
+                    <svg width="100%" height="80" viewBox="0 0 400 80">
+                        <defs>
+                            <linearGradient id="trendGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#52b788;stop-opacity:0.2" />
+                                <stop offset="100%" style="stop-color:#52b788;stop-opacity:0" />
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Area fill -->
+                        <path d="M 40,30 L 100,25 L 160,28 L 220,38 L 280,42 L 340,48 L 340,80 L 40,80 Z" 
+                              fill="url(#trendGradient)"/>
+                        
+                        <!-- Line -->
+                        <path d="M 40,30 L 100,25 L 160,28 L 220,38 L 280,42 L 340,48" 
+                              stroke="#52b788" 
+                              stroke-width="3" 
+                              fill="none"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        
+                        <!-- Points -->
+                        <circle cx="40" cy="30" r="4" fill="#2d7a4f"/>
+                        <circle cx="100" cy="25" r="4" fill="#2d7a4f"/>
+                        <circle cx="160" cy="28" r="4" fill="#2d7a4f"/>
+                        <circle cx="220" cy="38" r="4" fill="#f77f00"/>
+                        <circle cx="280" cy="42" r="4" fill="#f77f00"/>
+                        <circle cx="340" cy="48" r="6" fill="#d62828"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Markers List Enhanced -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Ecosystem Markers</h3>
+                    <a href="#" class="card-action" onclick="alert('Would show detailed marker breakdown'); return false;">
+                        View All Details →
+                    </a>
+                </div>
+                
+                <div class="markers-grid">
+                    <div class="marker-card good" onclick="showDetail('biodiversity')">
+                        <div class="marker-icon">🌱</div>
+                        <div class="marker-info">
+                            <div class="marker-name">Wild Biodiversity</div>
+                            <div class="marker-description">Native species richness</div>
+                        </div>
+                        <div class="marker-score-display">
+                            <div class="marker-score-number">7.8</div>
+                            <div class="marker-bar">
+                                <div class="marker-bar-fill" style="width: 78%; background: linear-gradient(90deg, var(--success), var(--forest-light));"></div>
+                            </div>
+                            <div class="marker-trend trend-stable">
+                                <span class="tooltip">→<span class="tooltiptext">Stable</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="marker-card fair" onclick="showDetail('abiotic')">
+                        <div class="marker-icon">🪨</div>
+                        <div class="marker-info">
+                            <div class="marker-name">Abiotic Integrity</div>
+                            <div class="marker-description">Soil, water, geology</div>
+                        </div>
+                        <div class="marker-score-display">
+                            <div class="marker-score-number">4.8</div>
+                            <div class="marker-bar">
+                                <div class="marker-bar-fill" style="width: 48%; background: linear-gradient(90deg, var(--warning), var(--earth));"></div>
+                            </div>
+                            <div class="marker-trend trend-declining">
+                                <span class="tooltip">↓<span class="tooltiptext">Declining</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="marker-card poor" onclick="showDetail('connectivity')">
+                        <div class="marker-icon">🌉</div>
+                        <div class="marker-info">
+                            <div class="marker-name">Connectivity</div>
+                            <div class="marker-description">Wildlife corridors</div>
+                        </div>
+                        <div class="marker-score-display">
+                            <div class="marker-score-number" style="color: var(--alert);">4.1</div>
+                            <div class="marker-bar">
+                                <div class="marker-bar-fill" style="width: 41%; background: linear-gradient(90deg, var(--alert), var(--warning));"></div>
+                            </div>
+                            <div class="marker-trend trend-declining">
+                                <span class="tooltip">↓↓<span class="tooltiptext">Rapidly declining</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="marker-card moderate" onclick="showDetail('vigor')">
+                        <div class="marker-icon">💪</div>
+                        <div class="marker-info">
+                            <div class="marker-name">Vigor & Organization</div>
+                            <div class="marker-description">Productivity & structure</div>
+                        </div>
+                        <div class="marker-score-display">
+                            <div class="marker-score-number">6.5</div>
+                            <div class="marker-bar">
+                                <div class="marker-bar-fill" style="width: 65%; background: linear-gradient(90deg, var(--forest-light), var(--forest-medium));"></div>
+                            </div>
+                            <div class="marker-trend trend-improving">
+                                <span class="tooltip">↗<span class="tooltiptext">Improving</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="marker-card moderate" onclick="showDetail('resilience')">
+                        <div class="marker-icon">🌡️</div>
+                        <div class="marker-info">
+                            <div class="marker-name">Resilience</div>
+                            <div class="marker-description">Climate adaptation</div>
+                        </div>
+                        <div class="marker-score-display">
+                            <div class="marker-score-number">6.0</div>
+                            <div class="marker-bar">
+                                <div class="marker-bar-fill" style="width: 60%; background: linear-gradient(90deg, var(--forest-light), var(--sky));"></div>
+                            </div>
+                            <div class="marker-trend trend-declining">
+                                <span class="tooltip">↓<span class="tooltiptext">Declining</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="marker-card moderate" onclick="showDetail('services')">
+                        <div class="marker-icon">🌊</div>
+                        <div class="marker-info">
+                            <div class="marker-name">Ecosystem Services</div>
+                            <div class="marker-description">Benefits to people</div>
+                        </div>
+                        <div class="marker-score-display">
+                            <div class="marker-score-number">5.5</div>
+                            <div class="marker-bar">
+                                <div class="marker-bar-fill" style="width: 55%; background: linear-gradient(90deg, var(--sky), var(--forest-light));"></div>
+                            </div>
+                            <div class="marker-trend trend-declining">
+                                <span class="tooltip">↓<span class="tooltiptext">Declining</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="marker-card good" onclick="showDetail('reciprocity')">
+                        <div class="marker-icon">🤝</div>
+                        <div class="marker-info">
+                            <div class="marker-name">Community-Nature Reciprocity</div>
+                            <div class="marker-description">Traditional practices</div>
+                        </div>
+                        <div class="marker-score-display">
+                            <div class="marker-score-number">7.5</div>
+                            <div class="marker-bar">
+                                <div class="marker-bar-fill" style="width: 75%; background: linear-gradient(90deg, var(--success), var(--forest-medium));"></div>
+                            </div>
+                            <div class="marker-trend trend-stable">
+                                <span class="tooltip">→<span class="tooltiptext">Stable</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        <div class="card full-width" id="alerts">
+            <div class="card-header">
+                <h3 class="card-title">🚨 Active Alerts & Events</h3>
+                <a href="#" class="card-action" onclick="alert('Would show alert history and settings'); return false;">
+                    Manage Alerts →
+                </a>
+            </div>
+            
+            <div class="alerts-container">
+                <div class="alert-card critical">
+                    <div class="alert-header">
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Highway Proposal Threatens Critical Wildlife Corridor</div>
+                            <div class="alert-meta">
+                                <div class="alert-meta-item">📅 2 days ago</div>
+                                <div class="alert-meta-item">📰 MoEF Notification</div>
+                                <div class="alert-meta-item">🔴 CRITICAL</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert-summary">
+                        Proposed 45km highway through landscape intersects Corridor 3 (currently at 2.8/10 - failing) and affects Corridor 2 (4.2/10 - weak). Public comment period open until <strong>January 31, 2026</strong>. If approved, connectivity could drop to 3.5/10, potentially isolating wildlife populations and breaking essential migration routes.
+                    </div>
+                    <div class="alert-impact">
+                        📊 Projected Impact: Connectivity -0.5 to -1.0 • Biodiversity -0.3 • Overall FNE -0.4
+                    </div>
+                    <div class="alert-actions">
+                        <button class="btn btn-primary" onclick="alert('Would open comment submission form with template')">
+                            ✍️ Submit Public Comment
+                        </button>
+                        <button class="btn btn-secondary" onclick="alert('Would open full EIA document')">
+                            📄 Read Full EIA
+                        </button>
+                        <button class="btn btn-secondary" onclick="alert('Would show coordination platform')">
+                            👥 Coordinate Response
+                        </button>
+                    </div>
+                </div>
+
+                <div class="alert-card warning">
+                    <div class="alert-header">
+                        <div class="alert-icon">🐘</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Human-Elephant Conflict Incidents Increase 40%</div>
+                            <div class="alert-meta">
+                                <div class="alert-meta-item">📅 Last 7 days</div>
+                                <div class="alert-meta-item">📰 Multiple sources (8 reports)</div>
+                                <div class="alert-meta-item">🟠 HIGH PRIORITY</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert-summary">
+                        Six major conflict incidents this month: 25 homes damaged, 3 injuries, crop losses across 40 ha. Conflicts concentrated in northern section near failing Corridor 3. Pattern suggests habitat fragmentation forcing elephants into human settlements. Community frustration rising - risk to conservation support.
+                    </div>
+                    <div class="alert-impact">
+                        📊 Impact: Reciprocity marker declining (-0.2) • Community relations deteriorating
+                    </div>
+                    <div class="alert-actions">
+                        <button class="btn btn-primary" onclick="alert('Would open conflict map and patterns')">
+                            🗺️ View Conflict Map
+                        </button>
+                        <button class="btn btn-secondary" onclick="alert('Would show mitigation programs')">
+                            🛡️ Support Mitigation
+                        </button>
+                        <button class="btn btn-secondary" onclick="alert('Would connect to rapid response team')">
+                            📞 Contact Response Team
+                        </button>
+                    </div>
+                </div>
+
+                <div class="alert-card positive">
+                    <div class="alert-header">
+                        <div class="alert-icon">✅</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Community-Led Stream Restoration Success</div>
+                            <div class="alert-meta">
+                                <div class="alert-meta-item">📅 8 days ago</div>
+                                <div class="alert-meta-item">📰 Mongabay India</div>
+                                <div class="alert-meta-item">🟢 POSITIVE</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert-summary">
+                        Ammathi village community restored 15 hectares of degraded stream habitat over 18 months. Three endemic frog species (including critically endangered Indirana gundia) returned after 5-year absence. Project cost only ₹2 lakhs, led entirely by local communities with minimal technical support. Demonstrates scalable model for landscape-wide restoration.
+                    </div>
+                    <div class="alert-impact">
+                        📊 Impact: Biodiversity +0.1 • Abiotic Integrity +0.1 • Reciprocity +0.1
+                    </div>
+                    <div class="alert-actions">
+                        <button class="btn btn-primary" onclick="alert('Would open detailed case study')">
+                            📖 Read Case Study
+                        </button>
+                        <button class="btn btn-secondary" onclick="alert('Would connect to community leaders')">
+                            🤝 Connect with Community
+                        </button>
+                        <button class="btn btn-secondary" onclick="alert('Would open replication toolkit')">
+                            🔄 Replication Guide
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Future Scenarios -->
+        <div class="card full-width">
+            <div class="card-header">
+                <h3 class="card-title">🔮 Future Scenarios: Where is Your Landscape Headed?</h3>
+                <a href="#" class="card-action" onclick="alert('Would open scenario modeling tool'); return false;">
+                    Explore in Detail →
+                </a>
+            </div>
+            
+            <div class="scenarios-grid">
+                <div class="scenario-card scenario-declining">
+                    <div class="scenario-label">Scenario 1</div>
+                    <div class="scenario-title">Business as Usual</div>
+                    <div class="scenario-score-display">
+                        <div class="scenario-score" style="color: var(--alert);">4.9</div>
+                        <div class="scenario-timeframe">in 5 years</div>
+                    </div>
+                    <div class="scenario-description">
+                        If current trends continue: FNE drops below "Moderate" threshold. Connectivity reaches crisis (<3.0), abiotic integrity severely degraded, ecosystem services insufficient for community needs.
+                    </div>
+                </div>
+                
+                <div class="scenario-card scenario-crisis">
+                    <div class="scenario-label">Scenario 2</div>
+                    <div class="scenario-title">Highway Built</div>
+                    <div class="scenario-score-display">
+                        <div class="scenario-score" style="color: var(--earth);">4.5</div>
+                        <div class="scenario-timeframe">in 5 years</div>
+                    </div>
+                    <div class="scenario-description">
+                        If highway proceeds without mitigation: Connectivity collapses to 2.8. Isolated habitat patches, 60% increase in human-wildlife conflict, accelerated biodiversity decline, fragmented landscape.
+                    </div>
+                </div>
+                
+                <div class="scenario-card scenario-recovery">
+                    <div class="scenario-label">Scenario 3</div>
+                    <div class="scenario-title">Active Restoration</div>
+                    <div class="scenario-score-display">
+                        <div class="scenario-score" style="color: var(--success);">7.1</div>
+                        <div class="scenario-timeframe">in 5 years</div>
+                    </div>
+                    <div class="scenario-description">
+                        Stop/reroute highway + restore 3 corridors + stream restoration + community support. Significant recovery possible. Investment: ₹26 crore over 5 years. Returns: ₹200+ crore/year in ecosystem services.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <div class="cta-title">Ready to Monitor Your Landscape?</div>
+            <div class="cta-text">
+                This is a prototype demonstrating real-time FNE monitoring. Interested in implementing this for your landscapes? 
+                Let's discuss how we can build this together.
+            </div>
+            <div class="cta-buttons">
+                <button class="btn-cta btn-cta-primary" onclick="alert('Would open contact form or scheduling')">
+                    Schedule a Discussion
+                </button>
+                <button class="btn-cta btn-cta-secondary" onclick="alert('Would open detailed methodology document')">
+                    Learn More About FNE Framework
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll to alerts
+        function scrollToAlerts() {
+            document.getElementById('alerts').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Show marker details
+        function showDetail(marker) {
+            alert(`This would open a detailed view of the ${marker} marker with:\n\n` +
+                  `• Historical trends\n` +
+                  `• Sub-indicator breakdown\n` +
+                  `• Data sources and confidence levels\n` +
+                  `• Specific action recommendations\n` +
+                  `• Related alerts and events\n\n` +
+                  `Click anywhere to continue exploring the demo.`);
+        }
+
+        // Animate gauge on load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const gauge = document.querySelector('.gauge-value');
+                const score = 6.2;
+                const maxScore = 10;
+                const circumference = 251.2;
+                const offset = circumference - (score / maxScore) * circumference;
+                gauge.style.strokeDashoffset = offset;
+            }, 300);
+        });
+
+        // Animate marker bars
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelectorAll('.marker-bar-fill').forEach((bar, index) => {
+                    setTimeout(() => {
+                        bar.style.transition = 'width 1s ease-out';
+                    }, index * 100);
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
